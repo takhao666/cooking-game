@@ -587,7 +587,10 @@ function drawOrderBoard(ctx, world) {
   ctx.font = `12px ${FONT}`;
   ctx.fillText(`${world.orders.length} ticket${world.orders.length === 1 ? '' : 's'} waiting`, BOARD.width / 2, BOARD.y + 50);
   world.orders.forEach((order, index) => {
-    drawTicket(ctx, order, 14, BOARD.y + 62 + index * 116, BOARD.width - 28, 108);
+    // A fresh ticket slides in from the left over a third of a second.
+    const age = world.dayTime - (order.spawnedAt ?? 0);
+    const slide = age < 0.35 ? -260 * (1 - age / 0.35) * (1 - age / 0.35) : 0;
+    drawTicket(ctx, order, 14 + slide, BOARD.y + 62 + index * 116, BOARD.width - 28, 108);
   });
   if (world.orders.length === 0) {
     ctx.fillStyle = '#fff3e0';
@@ -635,6 +638,24 @@ function drawHUD(ctx, world, muted) {
     ctx.fillStyle = '#ff7043';
     ctx.font = `bold 18px ${FONT}`;
     ctx.fillText(`COMBO x${world.combo}`, 830, 35);
+  }
+  // the rush reads in a glance: while a ticket is nearly out, the day clock
+  // pulses red. (A full board alone is not an emergency.)
+  const rushing = world.orders.some((order) => order.patience < 10);
+  if (rushing) {
+    const pulse = 0.55 + 0.45 * Math.sin(Date.now() / 180);
+    ctx.save();
+    ctx.globalAlpha = pulse;
+    ctx.strokeStyle = '#e53935';
+    ctx.lineWidth = 3;
+    roundRect(ctx, 348, 8, 144, 42, 8);
+    ctx.stroke();
+    ctx.fillStyle = '#ff8a80';
+    ctx.font = `bold 18px ${FONT}`;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${minutes}:${String(seconds).padStart(2, '0')}`, 420, 35);
+    ctx.restore();
+    ctx.textAlign = 'left';
   }
   // hearts
   for (let i = 0; i < MAX_HEARTS; i += 1) {

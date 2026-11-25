@@ -81,6 +81,8 @@ export function spawnOrder(world) {
     patience,
     maxPatience: patience,
     lastTickSecond: -1,
+    // when the ticket landed, so it can slide onto the board
+    spawnedAt: world.dayTime,
   });
   world.nextOrderId += 1;
 }
