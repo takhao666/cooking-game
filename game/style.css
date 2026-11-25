@@ -1,0 +1,42 @@
+/* style.css — the page around the canvas. One file, one job: layout. */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #241a12;
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+}
+
+main {
+  padding: 12px;
+  text-align: center;
+}
+
+canvas {
+  display: block;
+  width: min(1280px, 96vw);
+  height: auto;
+  border: 4px solid #8d5a2b;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  background: #e9c795;
+  cursor: pointer;
+}
+
+.hint {
+  color: #d7ccc8;
+  font-size: 14px;
+  margin: 10px 0 0;
+}
